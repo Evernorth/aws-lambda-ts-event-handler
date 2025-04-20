@@ -1,18 +1,19 @@
-# Guidance on how to contribute
+Contributing
 
-Include information that will help a contributor understand expectations and be successful, such as the examples below.
-> Want to see a good real world example? Take a look at the [CONTRIBUTING.adoc](https://github.com/spring-projects/spring-boot/blob/main/CONTRIBUTING.adoc) for spring-boot.
+Thanks for your interest in contributing to this project!
 
-* Where to ask Questions? Please make sure it is SEARCHABLE
-* Who are the TC’s (Trusted Committers)?
-* How to file an Issue
-* How to file a PR
-* Dependencies
-* Style Guide / Coding standards
-* Developer Environment
-* Branching/ versioning
-* Features
-* Testing
-* Roadmap
-* Calendar
-* Links to other documentation
+We welcome any kind of contribution, including:
+
+    Documentation
+    Examples
+    New features and feature requests
+    Bug fixes
+
+For small changes, open pull requests.
+
+For larger changes, submit an issue that outlines the following:
+
+    The use case that your changes are applicable to.
+    Steps to reproduce the issue(s) if applicable.
+    A detailed description of what your changes would entail.
+    Alternative solutions or approaches if applicable.

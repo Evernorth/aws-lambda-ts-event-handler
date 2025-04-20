@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "target": "es2020", // Modern target for better performance and features
+        "module": "commonjs", // CommonJS for compatibility
+        "lib": ["ES2020"], // Include modern JavaScript features
+        "strict": true, // Enable all strict type-checking options
+        "noImplicitAny": true, // Disallow implicit 'any' types
+        "strictNullChecks": true, // Ensure strict null checks
+        "strictFunctionTypes": true, // Ensure strict function types
+        "strictBindCallApply": true, // Ensure strict bind, call, and apply methods
+        "strictPropertyInitialization": true, // Ensure strict property initialization
+        "noImplicitThis": true, // Disallow 'this' of type 'any'
+        "alwaysStrict": true, // Parse in strict mode and emit "use strict"
+        "noUnusedLocals": true, // Report errors on unused locals
+        "noUnusedParameters": true, // Report errors on unused parameters
+        "noImplicitReturns": true, // Report error when not all code paths in function return a value
+        "noFallthroughCasesInSwitch": true, // Report errors for fallthrough cases in switch statements
+        "esModuleInterop": true, // Enable interoperability between CommonJS and ES Modules
+        "forceConsistentCasingInFileNames": true, // Ensure consistent casing in file names
+        "skipLibCheck": true, // Skip type checking of declaration files
+        "moduleResolution": "node", // Use Node.js module resolution
+        "resolveJsonModule": true, // Include modules imported with .json extension
+        "experimentalDecorators": true, // Enable experimental support for decorators
+        "emitDecoratorMetadata": true, // Emit design-type metadata for decorated declarations
+        "declaration": true, // Generate .d.ts files
+        "declarationMap": true, // Create sourcemaps for d.ts files
+        "outDir": "lib", // Redirect output structure to the directory
+        "baseUrl": "src", // Base directory to resolve non-relative module names
+        "rootDirs": ["src"], // List of root folders whose combined content represents the structure of the project
+        "pretty": true, // Enable color and formatting in TypeScript's output
+        "inlineSourceMap": true, // Emit a single file with source maps instead of having a separate file
+        "incremental": true, // Enable incremental compilation
+        "tsBuildInfoFile": "lib/.tsbuildinfo" // Specify the folder for .tsbuildinfo incremental compilation files
+    },
+    "include": ["src/**/*"], // Include all files in the src directory
+    "exclude": ["node_modules", "lib"], // Exclude node_modules and output directory
+    "watchOptions": {
+        "watchFile": "useFsEvents", // Use file system events for watching files
+        "watchDirectory": "useFsEvents", // Use file system events for watching directories
+        "fallbackPolling": "dynamicPriority" // Use dynamic priority polling as a fallback
+    },
+    "types": ["node"] // Include type definitions for Node.js
+}
