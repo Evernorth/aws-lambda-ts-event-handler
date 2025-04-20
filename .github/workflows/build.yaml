@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version: 22
 
       - name: Install dependencies and build
         run: |
@@ -26,40 +26,3 @@ jobs:
       - name: Run tests
         run: |
           npm run test
-
-  publish:
-    needs: build
-    environment: prod
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          show-progress: false
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-
-      - name: Set up NPM
-        run: |
-          NPM_REPO="https://repo.sys.cigna.com/artifactory/api/npm/npm-repos/"
-          curl -H "X-JFrog-Art-Api:${{ secrets.ARTIFACTORY_DEPLOYER_TOKEN }}" "${NPM_REPO}auth/cigna" > .npmrc
-          sed -i 's|http://|https://|g' .npmrc
-          if [[ "$(head -n1 .npmrc)" != *${NPM_REPO} ]]; then
-            echo "invalid publish credentials received:"
-            cat .npmrc
-            exit 1
-          fi
-          npm config set @cigna:registry ${NPM_REPO}
-          npm config set scope cigna
-
-      - name: Install dependencies and publish
-        run: |
-          NPM_REPO="https://repo.sys.cigna.com/artifactory/api/npm/npm-repos/"
-          rm -rf .github .gitignore # Don't want this pushed
-          npm install
-          npm run build
-          npm publish
