@@ -4,7 +4,7 @@
 
 Minimalistic event handler & HTTP router for Serverless applications.
 
-`aws-lambda-ts-event-handler` is a lightweight and focusted Typescript library that brings elegant HTTP routing to AWS Lambda functions - without the overhead of traditional web frameworks.
+`aws-lambda-ts-event-handler` is a lightweight and focused Typescript library that brings elegant HTTP routing to AWS Lambda functions - without the overhead of traditional web frameworks.
 Designed specifically for serverless workloads on AWS, this library enables developers to define clean and type-safe API routes using Typescript decorations.
 
 **Features**
@@ -23,15 +23,15 @@ See the [package.json](./package.json) file.
 
 ## Building from Source
 
-For detailed instructions to build the project from source, please see [INSTALL](INSTALL.md) document. To add this library to your project, run
+For detailed instructions to build the project from source, please see [INSTALL](INSTALL.md) document. 
+
+## Installation
+
+To add this library to your project, run
 
 ```shell
 npm install --save @evernorth/aws-lambda-ts-event-handler
 ```
-
-## Installation
-
-Please see [INSTALL](INSTALL.md) document.
 
 ## Configuration
 
@@ -82,7 +82,6 @@ const helloHandler = async (
 app.addRoute("GET", "/v1/hello", helloHandler as AsyncFunction);
 
 // Declare your Lambda handler
-// Declare your Lambda handler
 exports.handler = (
   _event: APIGatewayProxyEvent,
   _context: Context
@@ -122,7 +121,7 @@ import {
   JSONData,
   Handler,
   LocalTestServer,
-} from "@cigna/aws-lambda-ts-event-handler";
+} from "@evernorth/aws-lambda-ts-event-handler";
 
 // Initialize the event handler
 const app = new ApiGatewayResolver();
@@ -191,7 +190,7 @@ adds standard CORS headers to the response
 * Request completely sent off
 < HTTP/1.1 200 OK
 < Content-Type: application/json
-< Access-Control-Allow-Origin: *
+< Access-Control-Allow-Origin: * # For security, it is recommended to specify specific allow-listed domains.
 < Access-Control-Allow-Headers: Authorization,Content-Type,X-Amz-Date,X-Api-Key,X-Amz-Security-Token
 < content-length: 25
 < Date: Mon, 10 Mar 2025 20:47:29 GMT
@@ -202,17 +201,11 @@ adds standard CORS headers to the response
 {"message":"Hello World"}%
 ```
 
-## Known issues
+---
 
-Document any known significant shortcomings with the software.
+## Support
 
-## Getting help
-
-If you have questions, concerns, bug reports, etc., file an issue in this repository's Issue Tracker.
-
-## Getting involved
-
-See the [CONTRIBUTING](CONTRIBUTING.md) file for info on how to get involved.
+If you have questions, concerns, bug reports, etc. See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## License
 

@@ -5,11 +5,12 @@
  */
 import zlib from 'node:zlib';
 import { APIGatewayProxyEvent, APIGatewayProxyEventHeaders } from 'aws-lambda';
-import { ResponseBuilder } from '../../src/ApiGateway';
+import { ResponseBuilder } from '../../src/ApiGatewayEventRouter';
 import { CORSConfig, Response, Route, Headers, AsyncFunction } from '../../src';
 
 describe('Class: ResponseBuilder', () => {
-  const testFunc: AsyncFunction<string> = (_args: unknown): Promise<string> => Promise.resolve('');
+  const testFunc: AsyncFunction<string> = (_args: unknown): Promise<string> =>
+    Promise.resolve('');
 
   const testOrigin = 'test_origin';
   const allowHeaders = ['test_header'];
@@ -105,7 +106,7 @@ describe('Class: ResponseBuilder', () => {
         path: '/test',
         body: null,
         headers: {
-          'test-header': 'header-value'
+          'test-header': 'header-value',
         } as APIGatewayProxyEventHeaders,
         isBase64Encoded: false,
         queryStringParameters: null,
@@ -118,7 +119,7 @@ describe('Class: ResponseBuilder', () => {
         testFunc,
         false,
         false,
-        cacheControl
+        cacheControl,
       );
       const response = new Response(200);
       const responseBuilder = new ResponseBuilder(response, route);
@@ -148,7 +149,7 @@ describe('Class: ResponseBuilder', () => {
         testFunc,
         false,
         false,
-        cacheControl
+        cacheControl,
       );
       const response = new Response(500);
       const responseBuilder = new ResponseBuilder(response, route);
@@ -231,7 +232,7 @@ describe('Class: ResponseBuilder', () => {
       const response = new Response(
         500,
         'application.json',
-        JSON.parse(stringBody)
+        JSON.parse(stringBody),
       );
       const responseBuilder = new ResponseBuilder(response, route);
       const corsConfig = new CORSConfig(testOrigin, allowHeaders);
@@ -274,7 +275,7 @@ describe('Class: ResponseBuilder', () => {
         expect(
           zlib
             .gunzipSync(Buffer.from(jsonData['body'] as string, 'base64'))
-            .toString('utf8')
+            .toString('utf8'),
         ).toEqual(stringBody);
       }
     });

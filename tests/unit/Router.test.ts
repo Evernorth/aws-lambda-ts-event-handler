@@ -1,4 +1,4 @@
-import { Router } from '../../src/ApiGateway';
+import { Router } from '../../src/ApiGatewayEventRouter';
 import { AsyncFunction, Route } from '../../src/types';
 
 /**
@@ -13,7 +13,8 @@ describe('Class: Router', () => {
     beforeEach(() => {
       router = new Router();
     });
-    const testFunc: AsyncFunction<string> = (_args: unknown): Promise<string> => Promise.resolve('');
+    const testFunc: AsyncFunction<string> = (_args: unknown): Promise<string> =>
+      Promise.resolve('');
     test('should add a route to the routes list when registering a route declaratively', () => {
       const route = new Route('GET', '/v1/test', testFunc);
       router.registerRoute(
@@ -22,7 +23,7 @@ describe('Class: Router', () => {
         route.method,
         route.cors,
         route.compress,
-        route.cacheControl
+        route.cacheControl,
       );
       expect(router.routes).toBeDefined();
       expect(router.routes.length).toBeGreaterThan(0);
@@ -30,7 +31,6 @@ describe('Class: Router', () => {
     });
 
     test('should add a route to the routes list when registering a route via decorators', () => {
-
       class TestRouter {
         @router.route('GET', '/v1/test')
         public testFunc(): Promise<string> {

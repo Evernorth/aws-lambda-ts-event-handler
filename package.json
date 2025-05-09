@@ -1,5 +1,5 @@
 {
-  "name": "@cigna/aws-lambda-ts-event-handler",
+  "name": "@evernorth/aws-lambda-ts-event-handler",
   "version": "0.0.1",
   "description": "Minimalistic event handler & http router for Serverless applications",
   "main": "./lib/index.js",

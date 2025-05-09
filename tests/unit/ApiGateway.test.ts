@@ -10,7 +10,7 @@ import {
   ProxyEventType,
   ResponseBuilder,
   Router,
-} from '../../src/ApiGateway';
+} from '../../src/ApiGatewayEventRouter';
 import { Response } from '../../src/types/Response';
 import { AsyncFunction, CORSConfig, JSONData, Route } from '../../src/types';
 import { Middleware } from '../../src/middleware';

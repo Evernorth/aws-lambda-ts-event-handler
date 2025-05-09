@@ -171,8 +171,18 @@ class LocalTestServer {
       res.write(body);
     } catch (error) {
       console.error('Error constructing response:', error);
+
+      // IETF RFC 9457 compliant error response
+      const errorResponse = {
+        type: 'about:blank',
+        title: 'An unexpected error occurred while constructing the response.',
+        status: 500,
+        detail: `Error constructing response: ${error}`,
+      };
+
       res.statusCode = 500;
-      res.write('Internal Server Error');
+      res.setHeader('content-type', 'application/problem+json');
+      res.write(JSON.stringify(errorResponse));
     } finally {
       res.end();
     }
@@ -194,8 +204,16 @@ class LocalTestServer {
           );
         } catch (error) {
           console.error('Error handling request:', error);
+
+          // IETF RFC 9457 compliant error response
+          const errorResponse = {
+            type: 'about:blank',
+            title: 'An unexpected error occurred while handling the request.',
+            status: 500,
+          detail: `Error handling requestg/: ${error}`,
+          };
           res.statusCode = 500;
-          res.write('Internal Server Error');
+          res.write(JSON.stringify(errorResponse));
           res.end();
         }
       },

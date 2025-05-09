@@ -1,6 +1,6 @@
 module.exports = {
   displayName: {
-    name: 'Digital Typescript Library: EVENT-HANDLER',
+    name: 'Evernorth Typescript Library: aws-lambda-ts-event-handler',
     color: 'yellow',
   },
   'runner': 'groups',
