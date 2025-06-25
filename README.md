@@ -21,35 +21,9 @@ While robust frameworks like Express and Koa offer powerful tooling, they are of
 
 See the [package.json](./package.json) file.
 
-## Building from Source
-
-For detailed instructions to build the project from source, please see [INSTALL](INSTALL.md) document. 
-
 ## Installation
 
 To add this library to your project, run
-
-```shell
-npm install --save @evernorth/aws-lambda-ts-event-handler
-```
-
-## Configuration
-
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
-
-## Usage
-
-### Simple Example
-
-Let's create a simple AWS Lambda HTTP Event handler
-
-```shell
-mkdir aws-lambda-ts-event-handler-example
-cd aws-lambda-ts-event-handler-example
-npm init --yes
-```
-
-Install the dependency
 
 ```shell
 npm install --save @evernorth/aws-lambda-ts-event-handler
@@ -61,13 +35,17 @@ Install dev dependencies for AWS Lambda
 npm install --save-dev aws-lambda @types/node @types/aws-lambda
 ```
 
+## Usage
+
+### Simple Example
+
 Create a `app.ts` file
 
 ```typescript
 // Import API Gateway Event handler
-import { APIGatewayProxyEvent, Context } from "aws-lambda";
-import { ApiGatewayResolver } from "./ApiGateway";
-import { AsyncFunction, BaseProxyEvent, JSONData } from "types";
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { ApiGatewayResolver } from './ApiGateway';
+import { AsyncFunction, BaseProxyEvent, JSONData } from 'types';
 
 // Initialize the event handler
 const app = new ApiGatewayResolver();
@@ -75,16 +53,16 @@ const app = new ApiGatewayResolver();
 // Define a route
 const helloHandler = async (
   _event: BaseProxyEvent,
-  _context: Context
-): Promise<JSONData> => Promise.resolve({ message: "Hello World" });
+  _context: Context,
+): Promise<JSONData> => Promise.resolve({ message: 'Hello World' });
 
 // Register Route
-app.addRoute("GET", "/v1/hello", helloHandler as AsyncFunction);
+app.addRoute('GET', '/v1/hello', helloHandler as AsyncFunction);
 
 // Declare your Lambda handler
 exports.handler = (
   _event: APIGatewayProxyEvent,
-  _context: Context
+  _context: Context,
 ): Promise<JSONData> =>
   // Resolve routes
   app.resolve(_event, _context);
@@ -114,14 +92,14 @@ curl http://localhost:4000/v1/hello
 ### Register Route with Decorators
 
 ```typescript
-import { APIGatewayProxyEvent, Context } from "aws-lambda";
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import {
   ApiGatewayResolver,
   BaseProxyEvent,
   JSONData,
   Handler,
   LocalTestServer,
-} from "@evernorth/aws-lambda-ts-event-handler";
+} from '@evernorth/aws-lambda-ts-event-handler';
 
 // Initialize the event handler
 const app = new ApiGatewayResolver();
@@ -129,23 +107,23 @@ const app = new ApiGatewayResolver();
 // Define a Controller class
 export class HelloController {
   // Register a route
-  @app.get("/v1/hello")
+  @app.get('/v1/hello')
   public hello(_event: BaseProxyEvent, _context: Context): Promise<JSONData> {
-    return Promise.resolve({ message: "Hello World" });
+    return Promise.resolve({ message: 'Hello World' });
   }
 
-  @app.post("/v1/hello")
+  @app.post('/v1/hello')
   public postHello(
     _event: BaseProxyEvent,
-    _context: Context
+    _context: Context,
   ): Promise<JSONData> {
-    return Promise.resolve({ message: "Resource created" });
+    return Promise.resolve({ message: 'Resource created' });
   }
 }
 
 const handler = (
   _event: APIGatewayProxyEvent,
-  _context: Context
+  _context: Context,
 ): Promise<JSONData> =>
   // Resolve routes
   app.resolve(_event, _context);
@@ -162,13 +140,13 @@ if (require.main === module) {
 
 ```typescript
 // Import API Gateway Event handler
-import { CORSConfig } from "types";
-import { ApiGatewayResolver, ProxyEventType } from "./ApiGateway";
+import { CORSConfig } from 'types';
+import { ApiGatewayResolver, ProxyEventType } from './ApiGateway';
 
 // App with CORS Configurattion
 const app = new ApiGatewayResolver(
   ProxyEventType.APIGatewayProxyEvent,
-  new CORSConfig()
+  new CORSConfig(),
 );
 ```
 
