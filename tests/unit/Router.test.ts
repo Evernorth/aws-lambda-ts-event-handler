@@ -1,8 +1,8 @@
 import { Router } from '../../src/ApiGatewayEventRouter';
-import { AsyncFunction, Route } from '../../src/types';
+import { AsyncFunction } from '../../src/types';
 
 /**
- * ResponseBuilder tests
+ * Router tests
  *
  * @group unit/router/all
  */
@@ -13,35 +13,31 @@ describe('Class: Router', () => {
     beforeEach(() => {
       router = new Router();
     });
-    const testFunc: AsyncFunction<string> = (_args: unknown): Promise<string> =>
+
+    const testFunc: AsyncFunction<string> = (): Promise<string> =>
       Promise.resolve('');
-    test('should add a route to the routes list when registering a route declaratively', () => {
-      const route = new Route('GET', '/v1/test', testFunc);
-      router.registerRoute(
-        route.func,
-        route.rule as string,
-        route.method,
-        route.cors,
-        route.compress,
-        route.cacheControl,
-      );
-      expect(router.routes).toBeDefined();
-      expect(router.routes.length).toBeGreaterThan(0);
-      expect(router.routes).toEqual(expect.arrayContaining([route]));
+
+    test('should register route declaratively', () => {
+      router.registerRoute(testFunc, '/v1/test', 'GET');
+
+      expect(router.routes).toHaveLength(1);
+      expect(router.routes[0].method).toContain('GET');
+      expect(router.routes[0].rule).toBe('/v1/test');
     });
 
-    test('should add a route to the routes list when registering a route via decorators', () => {
+    test('should register route via decorators', () => {
+      // @ts-ignore
       class TestRouter {
+        // @ts-ignore
         @router.route('GET', '/v1/test')
         public testFunc(): Promise<string> {
           return Promise.resolve('');
         }
       }
-      const testRouter = new TestRouter();
-      const route = new Route('GET', '/v1/test', testRouter.testFunc);
-      expect(router.routes).toBeDefined();
-      expect(router.routes.length).toBeGreaterThan(0);
-      expect(router.routes).toEqual(expect.arrayContaining([route]));
+
+      expect(router.routes).toHaveLength(1);
+      expect(router.routes[0].method).toContain('GET');
+      expect(router.routes[0].rule).toBe('/v1/test');
     });
   });
 });

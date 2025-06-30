@@ -17,6 +17,7 @@ import {
   ContentType,
 } from '../types';
 import { lookupKeyFromMap } from '../utils';
+import { ProblemDocument } from 'http-problem-details';
 
 const TEST_SERVER_PORT = Number(process.env.TEST_SERVER_PORT) || 4000;
 process.env.MODE = 'LOCAL';
@@ -173,16 +174,14 @@ class LocalTestServer {
       console.error('Error constructing response:', error);
 
       // IETF RFC 9457 compliant error response
-      const errorResponse = {
-        type: 'about:blank',
+      const problemDocument = new ProblemDocument({
         title: 'An unexpected error occurred while constructing the response.',
         status: 500,
         detail: `Error constructing response: ${error}`,
-      };
-
+      });
       res.statusCode = 500;
       res.setHeader('content-type', 'application/problem+json');
-      res.write(JSON.stringify(errorResponse));
+      res.write(JSON.stringify(problemDocument));
     } finally {
       res.end();
     }
@@ -206,14 +205,14 @@ class LocalTestServer {
           console.error('Error handling request:', error);
 
           // IETF RFC 9457 compliant error response
-          const errorResponse = {
-            type: 'about:blank',
+          const problemDocument = new ProblemDocument({
             title: 'An unexpected error occurred while handling the request.',
+            detail: `Error handling request: ${error}`,
             status: 500,
-          detail: `Error handling requestg/: ${error}`,
-          };
+          });
           res.statusCode = 500;
-          res.write(JSON.stringify(errorResponse));
+          res.setHeader('Content-Type', 'application/problem+json');
+          res.write(JSON.stringify(problemDocument));
           res.end();
         }
       },

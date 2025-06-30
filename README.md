@@ -44,8 +44,12 @@ Create a `app.ts` file
 ```typescript
 // Import API Gateway Event handler
 import { APIGatewayProxyEvent, Context } from 'aws-lambda';
-import { ApiGatewayResolver } from './ApiGateway';
-import { AsyncFunction, BaseProxyEvent, JSONData } from 'types';
+import {
+  ApiGatewayResolver,
+  AsyncFunction,
+  BaseProxyEvent,
+  JSONData,
+} from '@evernorth/aws-lambda-ts-event-handler';
 
 // Initialize the event handler
 const app = new ApiGatewayResolver();
@@ -63,9 +67,17 @@ app.addRoute('GET', '/v1/hello', helloHandler as AsyncFunction);
 exports.handler = (
   _event: APIGatewayProxyEvent,
   _context: Context,
-): Promise<JSONData> =>
+): Promise<JSONData> => {
   // Resolve routes
-  app.resolve(_event, _context);
+  return app.resolve(_event, _context);
+};
+
+// Declare your Lambda handler
+if (require.main === module) {
+  LocalTestServer.getInstance(handler as Handler).start();
+} else {
+  module.exports.handler = handler;
+}
 ```
 
 Run the application
@@ -124,9 +136,10 @@ export class HelloController {
 const handler = (
   _event: APIGatewayProxyEvent,
   _context: Context,
-): Promise<JSONData> =>
+): Promise<JSONData> => {
   // Resolve routes
-  app.resolve(_event, _context);
+  return app.resolve(_event, _context);
+};
 
 // Declare your Lambda handler
 if (require.main === module) {

@@ -18,6 +18,7 @@ import {
 import { Context as LambdaContext } from 'aws-lambda';
 import { Middleware, wrapWithMiddlewares } from './middleware';
 import { lookupKeyFromMap } from './utils';
+import { ProblemDocument } from 'http-problem-details';
 
 enum ProxyEventType {
   APIGatewayProxyEvent = 'APIGatewayProxyEvent',
@@ -393,11 +394,18 @@ class ApiGatewayResolver extends BaseRouter {
       }
     }
 
+    // IETF RFC 9457 compliant error response
+    const problemDocument = new ProblemDocument({
+      title: 'Not Found',
+      detail: 'No route found for the HTTP path',
+      status: 404,
+    });
+
     return new ResponseBuilder(
       new Response(
         404,
-        'application/json',
-        JSON.stringify({ statusCode: 404, message: 'Not Found' }),
+        'application/problem+json',
+        JSON.stringify(problemDocument),
         headers,
       ),
     );
