@@ -1,97 +1,209 @@
-#### Github.com/Evernorth OpenSource Project Template Instructions
-
-1. Clone the Github.com/Evernorth project repo that was created for your approved Open Source contribution by an Org admin.
-2. Copy all the *.MD from this repository to your new project. 
-3. Update the README, replacing the contents below as prescribed.
-4. Update CODEOWNERS replacing "\[ @Evernorth/team-name or each @username \]" with the expected value.
-5. Update the LICENSE and NOTICE replacing "\[ Year or Years Range of the Work \]" with the expected value.
-6. Update NOTICE replacing "\[ Project Repo Name \]" with the expected value.
-7. Delete these instructions and everything up to the _Project Title_ from the README.
-8. Write some great software and tell people about it.
-
-> Keep the README fresh! It's the first thing people see and will make the initial impression.
-
-> Want to see a good real world example? Take a look at the [README](https://github.com/spring-projects/spring-boot/blob/main/README.adoc) for spring-boot.
-
-----
-
 # aws-lambda-ts-event-handler
 
-**Description**:  Put a meaningful, short, plain-language description of what
-this project is trying to accomplish and why it matters.
-Describe the problem(s) this project solves.
-Describe how this software can improve the lives of its audience.
+**Description**:
 
-Other things to include:
+Minimalistic event handler & HTTP router for Serverless applications.
 
-  - **Technology stack**: Indicate the technological nature of the software, including primary programming language(s) and whether the software is intended as standalone or as a module in a framework or other ecosystem.
-  - **Status**:  Alpha, Beta, 1.1, etc. It's OK to write a sentence, too. The goal is to let interested people know where this project is at. This is also a good place to link to the [CHANGELOG](CHANGELOG.md).
-  - **Links to production or demo instances**
-  - Describe what sets this apart from related-projects. Linking to another doc or page is OK if this can't be expressed in a sentence or two.
+`aws-lambda-ts-event-handler` is a lightweight and focused Typescript library that brings elegant HTTP routing to AWS Lambda functions - without the overhead of traditional web frameworks.
+Designed specifically for serverless workloads on AWS, this library enables developers to define clean and type-safe API routes using Typescript decorations.
 
+**Features**
 
-**Screenshot**: If the software has visual components, consider placing a screenshot after the description;
+- **Minimal & Efficient**: Tailored for AWS Lambda to keep cold start times low and performant.
+- **Typescript Decorators**: Intuitive route defintions using modern decorator syntax.
+- **Built-in CORS Support**: Easily enable and configure CORS to your APIs.
+- **Local HTTP Test Server**: Simulate and test routes locally without deploying to AWS.
 
+**Why Use This?**
+While robust frameworks like Express and Koa offer powerful tooling, they are often optimized for traditional server environments. `aws-lambda-ts-event-handler` focuses on the specific needs of Lambda-based applications, providing just the right level of abstraction to build scalabale serverless APIs -cleanly and efficiently.
 
 ## Dependencies
 
-Describe any dependencies that must be installed for this software to work.
-This includes programming languages, databases or other storage mechanisms, build tools, frameworks, and so forth.
-If specific versions of other software are required, or known not to work, call that out.
-
-## Building from Source
-
-Detailed instructions on how to build the project from source. Also note where to get pre-built distribution, if building is not required.
+See the [package.json](./package.json) file.
 
 ## Installation
 
-Detailed instructions on how to install, configure, and get the project running.
-This should be frequently tested to ensure reliability. Alternatively, link to
-a separate [INSTALL](INSTALL.md) document.
+To add this library to your project, run
 
-## Configuration
+```shell
+npm install --save @evernorth/aws-lambda-ts-event-handler
+```
 
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
+Install dev dependencies for AWS Lambda
+
+```shell
+npm install --save-dev aws-lambda @types/node @types/aws-lambda
+```
 
 ## Usage
 
-Show users how to use the software.
-Be specific.
-Use appropriate formatting when showing code snippets.
+### Simple Example
 
-## How to test the software
+Create a `app.ts` file
 
-If the software includes automated tests, detail how to run those tests.
+```typescript
+// Import API Gateway Event handler
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import {
+  ApiGatewayResolver,
+  AsyncFunction,
+  BaseProxyEvent,
+  JSONData,
+} from '@evernorth/aws-lambda-ts-event-handler';
 
-## Known issues
+// Initialize the event handler
+const app = new ApiGatewayResolver();
 
-Document any known significant shortcomings with the software.
+// Define a route
+const helloHandler = async (
+  _event: BaseProxyEvent,
+  _context: Context,
+): Promise<JSONData> => Promise.resolve({ message: 'Hello World' });
 
-## Getting help
+// Register Route
+app.addRoute('GET', '/v1/hello', helloHandler as AsyncFunction);
 
-Instruct users how to get help with this software; this might include links to an issue tracker, wiki, mailing list, etc.
+// Declare your Lambda handler
+exports.handler = (
+  _event: APIGatewayProxyEvent,
+  _context: Context,
+): Promise<JSONData> => {
+  // Resolve routes
+  return app.resolve(_event, _context);
+};
 
-**Example**
+// Declare your Lambda handler
+if (require.main === module) {
+  LocalTestServer.getInstance(handler as Handler).start();
+} else {
+  module.exports.handler = handler;
+}
+```
 
-If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
+Run the application
 
-## Getting involved
+```shell
+ts-node app.ts
+```
 
-This section should detail why people should get involved and describe key areas you are
-currently focusing on; e.g., trying to get feedback on features, fixing certain bugs, building
-important pieces, etc.
+The package includes a test server (`LocalTestServer`) for local testing.
 
-General instructions on _how_ to contribute should be stated with a link to [CONTRIBUTING](CONTRIBUTING.md).
+You should see a message
+
+```shell
+Test server listening on port 4000
+```
+
+Test the service
+
+```shell
+curl http://localhost:4000/v1/hello
+{"message":"Hello World"}
+```
+
+### Register Route with Decorators
+
+```typescript
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import {
+  ApiGatewayResolver,
+  BaseProxyEvent,
+  JSONData,
+  Handler,
+  LocalTestServer,
+} from '@evernorth/aws-lambda-ts-event-handler';
+
+// Initialize the event handler
+const app = new ApiGatewayResolver();
+
+// Define a Controller class
+export class HelloController {
+  // Register a route
+  @app.get('/v1/hello')
+  public hello(_event: BaseProxyEvent, _context: Context): Promise<JSONData> {
+    return Promise.resolve({ message: 'Hello World' });
+  }
+
+  @app.post('/v1/hello')
+  public postHello(
+    _event: BaseProxyEvent,
+    _context: Context,
+  ): Promise<JSONData> {
+    return Promise.resolve({ message: 'Resource created' });
+  }
+}
+
+const handler = (
+  _event: APIGatewayProxyEvent,
+  _context: Context,
+): Promise<JSONData> => {
+  // Resolve routes
+  return app.resolve(_event, _context);
+};
+
+// Declare your Lambda handler
+if (require.main === module) {
+  LocalTestServer.getInstance(handler as Handler).start();
+} else {
+  module.exports.handler = handler;
+}
+```
+
+### CORS Support
+
+```typescript
+// Import API Gateway Event handler
+import { CORSConfig } from 'types';
+import { ApiGatewayResolver, ProxyEventType } from './ApiGateway';
+
+// App with CORS Configurattion
+const app = new ApiGatewayResolver(
+  ProxyEventType.APIGatewayProxyEvent,
+  new CORSConfig(),
+);
+```
+
+adds standard CORS headers to the response
+
+```shell
+➜ curl http://localhost:4000/v1/hello -v
+
+* Host localhost:4000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:4000...
+* Connected to localhost (::1) port 4000
+> GET /v1/hello HTTP/1.1
+> Host: localhost:4000
+> User-Agent: curl/8.7.1
+> Accept: */*
+>
+* Request completely sent off
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< Access-Control-Allow-Origin: * # For security, it is recommended to specify specific allow-listed domains.
+< Access-Control-Allow-Headers: Authorization,Content-Type,X-Amz-Date,X-Api-Key,X-Amz-Security-Token
+< content-length: 25
+< Date: Mon, 10 Mar 2025 20:47:29 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+<
+* Connection #0 to host localhost left intact
+{"message":"Hello World"}%
+```
+
+---
+
+## Support
+
+If you have questions, concerns, bug reports, etc. See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## License
-{ Project Title } is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
 
-----
+aws-lambda-ts-event-handler is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
 
-## Credits and references
+---
 
-1. Projects that inspired you
-2. Related projects
-3. Books, papers, talks, or other sources that have meaningful impact or influence on this project
+### Original Contributors
 
-
+1. Karthikeyan Perumal, Evernorth

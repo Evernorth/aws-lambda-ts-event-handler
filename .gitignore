@@ -4,6 +4,7 @@
 # IntelliJ
 /.idea
 *.iml
+/lib
 
 # Visual Studio Code
 /.vscode
